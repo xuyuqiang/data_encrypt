@@ -182,7 +182,7 @@ const dataToEncrypt = (
     return '';
   }
   // log('脱敏方式', options);
-  const isAll = options?.method.includes('all');
+  const isAll = options?.method.includes('auto');
   let result = data;
   if (options?.method.includes('idCard') || isAll) {
     result = converIdCard(result);
