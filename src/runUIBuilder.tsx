@@ -60,11 +60,13 @@ export default async function (
         return;
       }
       uiBuilder.showLoading(t('Begin execution'));
-      const recordIdList = await tb.getRecordIdList();
+      // const recordIdList = await tb.getRecordIdList();
       //构建替换数据
       const toSetTask = [];
-      console.time('fetchData')
+      testFetchDataTime(table,f);
+      return;
       //本地测试时间：20条数据，fetchData: 690.710205078125 ms
+      //线上环境20条数据：fetchData: 81009.14184570312 ms
       const recordList = await table.getRecordList();
       for (const record of recordList) {
         const cell = await record.getCellByField(f);
@@ -307,3 +309,30 @@ const convertName = (text: string) => {
 const log = (...other: any) => {
   console.log(...other);
 };
+
+//20条数据测试结果
+//本地服务：
+//fetchData-total: 673.870849609375 ms
+//getRecordList: 11.119140625 ms
+//loop record：32.301025390625 ms 大概每次
+//getCellByField：24.703857421875 ms 大概每次
+//getValue：8.302978515625 ms 大概每次
+const testFetchDataTime  = async (table:ITable,f:string) => {
+  console.time('fetchData-total');
+  console.time('getRecordList');
+  const recordList = await table.getRecordList();
+  console.timeEnd('getRecordList');
+  for (const record of recordList) {
+    console.time('loop record');
+    console.time('getCellByField');
+    const cell = await record.getCellByField(f);
+    console.timeEnd('getCellByField');
+    console.time('getValue');
+    const val = await cell.getValue();
+    console.timeEnd('getValue');
+    const realVal = val?.[0].text;
+    console.log('测试数据',realVal);
+    console.timeEnd('loop record');
+  }
+  console.timeEnd('fetchData-total');
+}
