@@ -63,22 +63,28 @@ export default async function (
       // const recordIdList = await tb.getRecordIdList();
       //构建替换数据
       const toSetTask = [];
-      testFetchDataTime(table,f);
-      return;
       //本地测试时间：20条数据，fetchData: 690.710205078125 ms
       //线上环境20条数据：fetchData: 81009.14184570312 ms
-      const recordList = await table.getRecordList();
+      const recordList = new Set(await table.getRecordList());
+      const size = recordList.size;
+      uiBuilder.showLoading(t('progress',{n:0,total:size}));
+      let i=0;
       for (const record of recordList) {
+        i++;
+        uiBuilder.showLoading(t('progress',{n:i,total:size}));
         const cell = await record.getCellByField(f);
         const val = await cell.getValue();
         const realVal = val?.[0].text;
         if (realVal) {
-          toSetTask.push({
-            recordId: record.id,
-            fields: {
-              [fd.id]: dataToEncrypt(realVal, { method: m }),
-            },
-          });
+          const replaceValue = dataToEncrypt(realVal, { method: m });
+          if (replaceValue !== realVal) {
+            toSetTask.push({
+              recordId: record.id,
+              fields: {
+                [fd.id]: replaceValue,
+              },
+            });
+          }
         }
       }
       console.timeEnd('fetchData')
@@ -310,13 +316,20 @@ const log = (...other: any) => {
   console.log(...other);
 };
 
-//20条数据测试结果
+//20条纯文本长度为20的数据测试结果
 //本地服务：
 //fetchData-total: 673.870849609375 ms
 //getRecordList: 11.119140625 ms
 //loop record：32.301025390625 ms 大概每次
 //getCellByField：24.703857421875 ms 大概每次
 //getValue：8.302978515625 ms 大概每次
+//线上服务:
+//fetchData-total: 80060.63110351562 ms
+//getRecordList: 58.830078125 ms
+//loop record: 3999.43701171875 ms 大概每次
+//getCellByField: 2999.3662109375 ms 大概每次
+//getValue: 999.1279296875 ms 大概每次
+
 const testFetchDataTime  = async (table:ITable,f:string) => {
   console.time('fetchData-total');
   console.time('getRecordList');
