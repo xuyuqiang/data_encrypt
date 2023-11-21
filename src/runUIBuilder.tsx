@@ -21,7 +21,6 @@ export default async function (
     return;
   }
   uiBuilder.markdown(`## ${t('title')}`);
-  uiBuilder.markdown(`###### ${t('desc')}`);
   uiBuilder.form(
     (form) => {
       const formItems: any = [
@@ -149,19 +148,19 @@ const initData = async ({ t }: any) => {
     fieldList,
     methodOptions: [
       {
-        label: t('all'),
-        value: 'all',
+        label: t('Auto'),
+        value: 'auto',
       },
       {
-        label: t('mobile'),
+        label: t('Mobile'),
         value: 'mobile',
       },
       {
-        label: t('name'),
+        label: t('Name'),
         value: 'name',
       },
       {
-        label: t('idCard'),
+        label: t('IdCard'),
         value: 'idCard',
       },
     ],
