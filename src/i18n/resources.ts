@@ -11,6 +11,8 @@ const resources = {
       'all':'全部',
       'Desensitization method':'脱敏方式',
       'Please select the desensitization method':'请选择脱敏方式',
+      'If there is a problem with the data after desensitization, please use the undo method to roll back the data (ctrl+z/⌘+z), and then select the correct desensitization method to re-desensitize it.':'如果脱敏后数据有问题，请使用撤销方式回滚数据(ctrl+z/⌘+z),然后选择正确的脱敏方式进行重新脱敏处理',
+      'The function of restoring desensitized data/viewing original desensitized data with one click is under development, so stay tuned...':'一键还原脱敏数据/查看脱敏原始数据功能，正在开发中，敬请期待...',
       'Welcome to UIBuilder': '欢迎使用 UIBuilder',
       'Getting data':'获取数据中...',
       'No field type':'没有符合要求的字段类型，只能操作文本类型的字段',
@@ -36,6 +38,8 @@ const resources = {
       // Define your English text
       'title':"Select the field to be replaced and click Replace to automatically replace the content with desensitized data.",
       'confirmBtnText':"Replace",
+      'tip1':'If there is a problem with the data after desensitization, please use the undo method to roll back the data (ctrl+z/⌘+z), and then select the correct desensitization method to re-desensitize it.',
+      'tip2':'The function of restoring desensitized data/viewing original desensitized data with one click is under development, so stay tuned...',
       'Welcome to UIBuilder': 'Welcome to UIBuilder',
       'Getting data':'Getting data...',
       'No field type':'There is no field type that meets the requirements, and only text type fields can be operated.',

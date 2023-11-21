@@ -109,8 +109,8 @@ export default async function (
       }
     }
   );
-  uiBuilder.markdown('###### 如果脱敏后数据有问题，请使用撤销方式回滚数据(ctrl+z/⌘+z),然后选择正确的脱敏方式进行重新脱敏处理');
-  uiBuilder.markdown(`###### 一键还原脱敏数据/查看脱敏原始数据功能，正在开发中，敬请期待...`);
+  uiBuilder.markdown(`###### ${t('If there is a problem with the data after desensitization, please use the undo method to roll back the data (ctrl+z/⌘+z), and then select the correct desensitization method to re-desensitize it.')}`);
+  uiBuilder.markdown(`###### ${t('The function of restoring desensitized data/viewing original desensitized data with one click is under development, so stay tuned...')}`);
   uiBuilder.hideLoading();
 }
 
