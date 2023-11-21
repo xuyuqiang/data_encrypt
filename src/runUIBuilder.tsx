@@ -61,15 +61,15 @@ export default async function (
       }
       uiBuilder.showLoading(t('Begin execution'));
       const recordIdList = await tb.getRecordIdList();
-
       //构建替换数据
       const toSetTask = [];
+      console.time('fetchData')
+      //本地测试时间：20条数据，fetchData: 690.710205078125 ms
       const recordList = await table.getRecordList();
       for (const record of recordList) {
         const cell = await record.getCellByField(f);
         const val = await cell.getValue();
         const realVal = val?.[0].text;
-        console.log('一键脱敏数据', realVal);
         if (realVal) {
           toSetTask.push({
             recordId: record.id,
@@ -79,13 +79,14 @@ export default async function (
           });
         }
       }
+      console.timeEnd('fetchData')
       if (toSetTask.length === 0) {
         uiBuilder.hideLoading();
         uiBuilder.message.warning(t('No data'));
         return;
       }
       uiBuilder.showLoading(
-        t('About to insert n random nicknames', { n: toSetTask.length })
+        t('Prepare to replace n pieces of data', { n: toSetTask.length })
       );
       const step = 5000;
       let hasError = false;
@@ -173,7 +174,7 @@ const dataToEncrypt = (
   if (!data) {
     return '';
   }
-  log('脱敏方式', options);
+  // log('脱敏方式', options);
   const isAll = options?.method.includes('all');
   let result = data;
   if (options?.method.includes('idCard') || isAll) {
@@ -185,7 +186,7 @@ const dataToEncrypt = (
   if (options?.method.includes('name') || isAll) {
     result = convertName(result);
   }
-  log('脱敏结果', data, result);
+  // log('脱敏结果', data, result);
   return result;
 };
 
