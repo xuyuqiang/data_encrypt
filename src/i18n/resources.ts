@@ -2,11 +2,13 @@ const resources = {
   zh: {
     translation: {
       // 定义你的中文文案
-      'title':"适用于将用户的真实姓名、手机号、身份证等通过隐藏替换进行脱敏改造。根据用户选择的目标列及脱敏形式，自动替换",
+      'title':"适用于将用户的真实姓名、手机号、身份证等通过隐藏替换进行脱敏改造",
+      'title2':'`**操作之前，请记得将原始数据备份**`',
       'confirmBtnText':"替换",
       'Mobile':'手机号码(185****8917)',
       'Name':'姓名(刘**/张*)',
       'IdCard':'身份证号码(410000****9417)',
+      'Pwd':'密码(******)',
       'Auto':'自动判断',
       'Desensitization method':'脱敏形式',
       'Please select the desensitization method':'请选择脱敏形式',

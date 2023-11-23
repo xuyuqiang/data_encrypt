@@ -21,6 +21,8 @@ export default async function (
     return;
   }
   uiBuilder.markdown(`## ${t('title')}`);
+  uiBuilder.markdown(`## ${t('title2')}`);
+
   uiBuilder.form(
     (form) => {
       const formItems: any = [
@@ -97,6 +99,8 @@ export default async function (
       );
       const step = 5000;
       let hasError = false;
+      //记录脱敏表
+
       for (let index = 0; index < toSetTask.length; index += step) {
         const element = toSetTask.slice(index, index + step);
         await tb
@@ -108,6 +112,8 @@ export default async function (
             hasError = true;
             console.log(e);
           });
+        //写入新表
+
       }
       uiBuilder.hideLoading();
       if (hasError) {
@@ -118,7 +124,7 @@ export default async function (
     }
   );
   uiBuilder.markdown(`###### ${t('If there is a problem with the data after desensitization, please use the undo method to roll back the data (ctrl+z/⌘+z), and then select the correct desensitization method to re-desensitize it.')}`);
-  uiBuilder.markdown(`###### ${t('The function of restoring desensitized data/viewing original desensitized data with one click is under development, so stay tuned...')}`);
+  // uiBuilder.markdown(`###### ${t('The function of restoring desensitized data/viewing original desensitized data with one click is under development, so stay tuned...')}`);
   uiBuilder.hideLoading();
 }
 
@@ -163,6 +169,10 @@ const initData = async ({ t }: any) => {
         label: t('IdCard'),
         value: 'idCard',
       },
+      {
+        label: t('Pwd'),
+        value: 'pwd',
+      },
     ],
   };
 };
@@ -181,21 +191,26 @@ const dataToEncrypt = (
   if (!data) {
     return '';
   }
-  // log('脱敏方式', options);
   const isAll = options?.method.includes('auto');
   let result = data;
-  if (options?.method.includes('idCard') || isAll) {
+  if ((options?.method.includes('idCard') || isAll) && isIdCard(result)) {
     result = converIdCard(result);
-  }
-  if (options?.method.includes('mobile') || isAll) {
+  } else if ((options?.method.includes('mobile') || isAll) && isPhoneNumber(result)) {
     result = convertMobile(result);
-  }
-  if (options?.method.includes('name') || isAll) {
+  } else if ((options?.method.includes('name') || isAll) && isName(result)) {
     result = convertName(result);
+  } else if ((options?.method.includes('pwd') || isAll) && !isEncrypData(result)) { //采用密码模式
+    result = '******';
   }
-  // log('脱敏结果', data, result);
   return result;
 };
+
+const isPhoneNumber = (str:string) => {
+  // 创建手机号的正则表达式
+  const phoneNumberPattern = /^1[3-9]\d{9}$/;
+  // 使用正则表达式进行匹配
+  return phoneNumberPattern.test(str);
+}
 
 const convertMobile = (str: string) => {
   const regex = /1[3-9]\d{9}/g;
@@ -203,6 +218,10 @@ const convertMobile = (str: string) => {
     return match.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2');
   });
 };
+
+const isIdCard = (str: string) => {
+  return /^\d{6}\d{8}\d{3}[\dX]$/.test(str);
+}
 
 const converIdCard = (str: string) => {
   // 正则表达式匹配18位身份证号码
@@ -212,6 +231,16 @@ const converIdCard = (str: string) => {
     return match.substring(0, 6) + '****' + match.substring(14, 18);
   });
 };
+
+//判断是否已经加过密
+const isEncrypData = (str: string) => {
+  return /\*{4,}/.test(str);
+}
+
+const isName = (str: string) => {
+  return /^[\u4e00-\u9fa5]{2,5}$/.test(str);
+}
+
 
 const convertName = (text: string) => {
   // 使用正则表达式匹配中文字符
